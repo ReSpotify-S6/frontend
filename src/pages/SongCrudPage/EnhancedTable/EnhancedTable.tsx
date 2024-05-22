@@ -19,21 +19,21 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { toSentenceCase } from './StringExtensions';
 
-function descendingComparator(a: object, b: object, orderBy: string) {
-    if (b[orderBy] < a[orderBy]) {
-        return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-        return 1;
-    }
-    return 0;
-}
+// function descendingComparator(a: object, b: object, orderBy: string) {
+//     if (b[orderBy] < a[orderBy]) {
+//         return -1;
+//     }
+//     if (b[orderBy] > a[orderBy]) {
+//         return 1;
+//     }
+//     return 0;
+// }
 
-function getComparator(order: "asc" | "desc", orderBy: string) {
-    return order === 'desc'
-        ? (a: object, b: object) => descendingComparator(a, b, orderBy)
-        : (a: object, b: object) => -descendingComparator(a, b, orderBy);
-}
+// function getComparator(order: "asc" | "desc", orderBy: string) {
+//     return order === 'desc'
+//         ? (a: object, b: object) => descendingComparator(a, b, orderBy)
+//         : (a: object, b: object) => -descendingComparator(a, b, orderBy);
+// }
 
 interface EnhancedTableProps {
     entityName: string;
@@ -161,15 +161,16 @@ export default function EnhancedTable(props: EnhancedTableProps) {
                     />
                     <TableBody>
                         {Array.isArray(rows) && rows
-                            .sort(getComparator(order, orderBy))
+                            // .sort(getComparator(order, orderBy))
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((row) => {
-                                const rowEnum = Object.keys(row).map((k) => row[k] as unknown as object);
+                                // @ts-ignore
+                                const rowEnum = Object.keys(row).map((k) => row[k]);
 
                                 return (
                                     <TableRow
                                         hover
-                                        key={rowEnum[0]}
+                                        // key={rowEnum[0]}
                                     >
                                         {rowEnum.map((value, index) =>
                                             (<TableCell align="left" key={`${rowEnum[0]}-${index}`}>

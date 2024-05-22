@@ -47,6 +47,7 @@ export default function CustomButton(props: CustomButtonProps) {
             <LoadingButton
                 onClick={handleClick}
                 loading={loading}
+                // @ts-ignore
                 component={link && Link}
                 to={link}
                 sx={{

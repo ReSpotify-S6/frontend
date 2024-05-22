@@ -55,7 +55,9 @@ export default function SongCrudPage(){
                     setUpdateDialogState={setUpdateDialogState}
                     setDeleteDialogState={setDeleteDialogState}
                     setSelectedTarget={(song: object) => setSelectedSong(song as Song)}
-                    format={format}
+                    format={format} 
+                    compactViewEnabled={false} 
+                    title=""    
                 />
             </Box>
             <CreateSongDialog
