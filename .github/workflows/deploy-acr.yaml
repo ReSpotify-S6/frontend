@@ -1,4 +1,4 @@
-name: Build and Deploy Container App
+name: Build and deploy to Azure Container Registry
 
 on:
   workflow_dispatch:
