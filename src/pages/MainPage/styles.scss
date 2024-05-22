@@ -1,0 +1,61 @@
+.main {
+    flex: 1 1 auto;
+
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+
+    margin-top: 128px;
+    gap: 32px;
+}
+
+.playbar {
+    flex: 0 1 80px;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #121212;
+
+    .controls {
+        flex: 1;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .progress {
+        flex: 1;
+        width: 30%;
+
+        .bar {
+            .MuiSlider-track {
+                background-color: white;
+                border-color: white;
+            }
+
+            .MuiSlider-rail {
+                background-color: lightgray;
+            }
+
+            .MuiSlider-thumb {
+                display: none;
+            }
+        }
+
+        .bar:hover {
+            .MuiSlider-track {
+                background-color: #1db954;
+                border-color: #1db954;
+            }
+
+            .MuiSlider-thumb {
+                display: block;
+                background-color: white;
+            }
+        }
+    }
+}
