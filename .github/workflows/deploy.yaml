@@ -13,8 +13,8 @@ jobs:
       run:
         shell: bash
     steps:
-    - uses: actions/checkout@v2
-    - uses: azure/docker-login@v1
+    - uses: actions/checkout@v4
+    - uses: azure/docker-login@v2
       with:
         login-server: respotify.azurecr.io
         username: ${{ secrets.ACR_REGISTRY_USERNAME }}
