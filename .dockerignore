@@ -3,4 +3,4 @@
 !*.ts
 !src
 !index.html
-!.env.production
+!.env*

@@ -57,7 +57,7 @@ export default function SongCrudPage(){
                     setSelectedTarget={(song: object) => setSelectedSong(song as Song)}
                     format={format} 
                     compactViewEnabled={false} 
-                    title=""    
+                    title=""
                 />
             </Box>
             <CreateSongDialog

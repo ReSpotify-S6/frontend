@@ -2,10 +2,11 @@
     flex: 1 1 auto;
 
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
+    height: 100%;
 
-    margin-top: 128px;
     gap: 32px;
 }
 
@@ -30,6 +31,11 @@
     .progress {
         flex: 1;
         width: 30%;
+
+        display: flex;
+        color: white;
+        gap: 10px;
+        font-size: small;
 
         .bar {
             .MuiSlider-track {
