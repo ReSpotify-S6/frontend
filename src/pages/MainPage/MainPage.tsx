@@ -1,6 +1,5 @@
 import { IconButton, Slider, Typography } from '@mui/material';
 import './styles.scss';
-import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import ShuffleIcon from '@mui/icons-material/Shuffle';
