@@ -1,66 +1,66 @@
-import api from "../config/axios";
-import { Song } from "./Song";
+import axios, { AxiosInstance } from "axios";
+import { CreateSongProps, Song, UpdateSongProps } from "./types";
 
-export async function getAllSongs(): Promise<Array<Song>> {
-    return api.get('/songs').then((response) => {
-        return response.data;
-    }).catch((error) => {
-        console.error(error);
-        return [];
-    });
-}
+export default class SongService {
+    private api: AxiosInstance;
 
-interface CreateSongProps {
-    title: string;
-    artist: string;
-    imageLink: string;
-    audioLink: string;
-}
+    constructor(token: string) {
+        this.api = axios.create({
+            baseURL: import.meta.env.VITE_BACKEND_URL,
+            timeout: 5000,
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Allow-Control-Allow-Origin': '*'
+            }
+        });
+    }
 
-export async function createSong(props: CreateSongProps): Promise<string> {
-    const { title, artist, imageLink, audioLink } = props;
+    getAllSongs = async (): Promise<Array<Song>> => {
+        return this.api.get('/songs').then((response) => {
+            return response.data;
+        }).catch((error) => {
+            console.error(error);
+            return [];
+        });
+    }
     
-    return api.post('/songs', {
-        title,
-        artist,
-        imageLink,
-        audioLink
-    }).then(() => {
-        return '';
-    }).catch(() => {
-        return "Unhandled error has occured.";
-    });
-}
+    createSong = async (props: CreateSongProps): Promise<string> => {
+        const { title, artist, imageLink, audioLink } = props;
+        
+        return this.api.post('/songs', {
+            title,
+            artist,
+            imageLink,
+            audioLink
+        }).then(() => {
+            return '';
+        }).catch(() => {
+            return "Unhandled error has occured.";
+        });
+    }
 
 
-interface UpdateSongProps {
-    id: string;
-    title: string;
-    artist: string;
-    imageLink: string;
-    audioLink: string;
-}
+    updateSong = async (props: UpdateSongProps): Promise<string> => {
+        const { id, title, artist, imageLink, audioLink } = props;
 
-export async function updateSong(props: UpdateSongProps): Promise<string> {
-    const { id, title, artist, imageLink, audioLink } = props;
+        return this.api.put(`/songs/${id}`, {
+            title,
+            artist,
+            imageLink,
+            audioLink
+        }).then(() => {
+            return '';
+        }).catch(() => {
+            return "Unhandled error has occured.";
+        });
+    }
 
-    return api.put(`/songs/${id}`, {
-        title,
-        artist,
-        imageLink,
-        audioLink
-    }).then(() => {
-        return '';
-    }).catch(() => {
-        return "Unhandled error has occured.";
-    });
-}
-
-export async function deleteSong(id: string): Promise<string> {
-    return api.delete(`/songs/${id}`)
-    .then(() => {
-        return '';
-    }).catch((error) => {
-        return error;
-    });
+    deleteSong = async (id: string): Promise<string> => {
+        return this.api.delete(`/songs/${id}`)
+        .then(() => {
+            return '';
+        }).catch((error) => {
+            return error;
+        });
+    }
 }

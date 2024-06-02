@@ -4,28 +4,37 @@ import CreateSongDialog from "./Dialog/CreateSongDialog";
 import UpdateSongDialog from "./Dialog/UpdateSongDialog";
 import DeleteEntityDialog from "./Dialog/DeleteEntityDialog";
 import { Box } from "@mui/material";
-import { Song } from "../../services/Song";
-import { deleteSong, getAllSongs } from "../../services/SongService";
+import { Song } from "../../services/types";
+import { useKeycloak } from "@react-keycloak/web";
+import SongService from "../../services/SongService";
 
-export default function SongCrudPage(){
-
+export default function SongCrudPage() {
     const [songs, setSongs] = useState<Song[]>([]);
     const [selectedSong, setSelectedSong] = useState<Song | undefined>(undefined);
     const [createDialogState, setCreateDialogState] = useState(false);
     const [updateDialogState, setUpdateDialogState] = useState(false);
     const [deleteDialogState, setDeleteDialogState] = useState(false);
+    const [service, setService] = useState<SongService>();
+    const { keycloak } = useKeycloak();
 
 
     useEffect(() => {
-        refresh();
-    }, []);
+        if (keycloak.token) {
+            const service = new SongService(keycloak.token);
+            service.getAllSongs().then((array) => {
+                setSongs(array);
+            });
+            setService(service);
+        }
+    }, [keycloak]);
+
 
     function handleDelete(id: string) {
-        deleteSong(id);
+        service?.deleteSong(id);
     }
 
     function refresh() {
-        getAllSongs().then((array) => {
+        service?.getAllSongs().then((array) => {
             setSongs(array);
         });
     }

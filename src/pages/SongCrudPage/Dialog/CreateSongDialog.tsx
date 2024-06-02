@@ -4,7 +4,9 @@ import Typography from "@mui/material/Typography";
 import DialogButton from "./DialogButton";
 import SimpleDialog from "./SimpleDialog";
 import * as React from "react";
-import { createSong } from "../../../services/SongService";
+import { useKeycloak } from "@react-keycloak/web";
+import SongService from "../../../services/SongService";
+import { useEffect } from "react";
 
 interface CreateSongDialogProps {
     open: boolean;
@@ -13,8 +15,17 @@ interface CreateSongDialogProps {
 }
 
 export default function CreateSongDialog(props: CreateSongDialogProps) {
-    const {open, setOpen, callback} = props;
+    const { open, setOpen, callback } = props;
     const [errorMessage, setErrorMessage] = React.useState('');
+    const [service, setService] = React.useState<SongService>();
+
+    const { keycloak } = useKeycloak();
+
+    useEffect(() => {
+        if (keycloak.token) {
+            setService(new SongService(keycloak.token));
+        }
+    }, [keycloak.token]);
 
 
     function handleCreate(event: React.FormEvent<HTMLFormElement>) {
@@ -25,13 +36,13 @@ export default function CreateSongDialog(props: CreateSongDialogProps) {
         const imageLink = data.get('imageLink') as string;
         const audioLink = data.get('audioLink') as string;
 
-        createSong({ title, artist, imageLink, audioLink })
+        service?.createSong({ title, artist, imageLink, audioLink })
             .then((response: string) => {
-                if(!response){
+                if (!response) {
                     callback?.();
                     handleClose();
                 }
-                else{
+                else {
                     setErrorMessage(response);
                 }
             });
@@ -45,12 +56,12 @@ export default function CreateSongDialog(props: CreateSongDialogProps) {
     return (
         <SimpleDialog title='Create a song' open={open}>
             <Box component="form" noValidate onSubmit={handleCreate}
-                 sx={{
-                     display: 'flex',
-                     flexDirection: 'column',
-                     gap: 3,
-                     width: 300,
-                 }}>
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 3,
+                    width: 300,
+                }}>
 
                 <TextField required id="title" label="Title" name='title' variant="outlined" />
                 <TextField required id="artist" label="Artist" name='artist' variant="outlined" />
@@ -64,11 +75,11 @@ export default function CreateSongDialog(props: CreateSongDialogProps) {
                 }}>
                     {errorMessage}
                 </Typography>
-                <Box sx={{display: 'flex', flexDirection: 'row', gap: 2}}>
-                    <DialogButton type='submit' label='Create' isDefault/>
-                    <DialogButton onClick={handleClose} label='Cancel' isDefault={false}/>
+                <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+                    <DialogButton type='submit' label='Create' isDefault />
+                    <DialogButton onClick={handleClose} label='Cancel' isDefault={false} />
                 </Box>
             </Box>
         </SimpleDialog>
-    )
+    );
 }

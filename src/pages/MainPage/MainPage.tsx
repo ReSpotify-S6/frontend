@@ -6,9 +6,10 @@ import ShuffleIcon from '@mui/icons-material/Shuffle';
 import RepeatIcon from '@mui/icons-material/Repeat';
 import { useEffect, useState } from 'react';
 import SongCard from './SongCard/SongCard';
-import { getAllSongs } from '../../services/SongService';
-import { Song } from '../../services/Song';
+import { Song } from '../../services/types';
 import { PauseCircle, PlayCircle } from '@mui/icons-material';
+import { useKeycloak } from '@react-keycloak/web';
+import SongService from '../../services/SongService';
 
 export default function App() {
     const [songs, setSongs] = useState<Song[]>([]);
@@ -17,11 +18,16 @@ export default function App() {
     const [progress, setProgress] = useState(0);
     const [currentTime, setCurrentTime] = useState(0);
 
+    const { keycloak } = useKeycloak();
+
     useEffect(() => {
-        getAllSongs().then((songs) => {
-            setSongs(songs);
-        });
-    }, []);
+        if (keycloak.token) {
+            const service = new SongService(keycloak.token);
+            service.getAllSongs().then((songs) => {
+                setSongs(songs);
+            });
+        }
+    }, [keycloak, keycloak.token]);
 
     useEffect(() => {
         if (!track) return;

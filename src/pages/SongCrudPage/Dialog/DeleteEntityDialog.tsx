@@ -15,8 +15,8 @@ export default function DeleteEntityDialog(props: DeleteEntityDialogProps) {
 
     function handleDelete(){
         entityId && deleteFunction(entityId);
-        setOpen(false);
         callback?.();
+        setOpen(false);
     }
     function handleClose(){
         setOpen(false);

@@ -4,8 +4,10 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import DialogButton from "./DialogButton";
-import { Song } from "../../../services/Song";
-import { updateSong } from "../../../services/SongService";
+import { Song } from "../../../services/types";
+import { useKeycloak } from "@react-keycloak/web";
+import { useEffect, useState } from "react";
+import SongService from "../../../services/SongService";
 
 interface UpdateSongDialogProps {
     open: boolean;
@@ -17,7 +19,16 @@ interface UpdateSongDialogProps {
 export default function UpdateSongDialog(props: UpdateSongDialogProps){
     const {open, setOpen, callback, song} = props;
 
-    const [errorMessage, setErrorMessage] = React.useState<string>('');
+    const [errorMessage, setErrorMessage] = useState<string>('');
+    const [service, setService] = useState<SongService>();
+
+    const { keycloak } = useKeycloak();
+
+    useEffect(() => {
+        if (keycloak.token) {
+            setService(new SongService(keycloak.token));
+        }
+    }, [keycloak.token]);
 
     function handleUpdate(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -27,7 +38,7 @@ export default function UpdateSongDialog(props: UpdateSongDialogProps){
         const imageLink = data.get('imageLink') as string;
         const audioLink = data.get('audioLink') as string;
 
-        updateSong({ id: song?.id as string, title, artist, imageLink, audioLink })
+        service?.updateSong({ id: song?.id as string, title, artist, imageLink, audioLink })
             .then((errorMessage: string) => {
                 if (errorMessage) {
                     setErrorMessage(errorMessage);
