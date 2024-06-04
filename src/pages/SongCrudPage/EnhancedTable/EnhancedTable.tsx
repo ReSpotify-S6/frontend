@@ -43,7 +43,9 @@ interface EnhancedTableProps {
     setDeleteDialogState?: (state: boolean) => void;
     setSelectedTarget: (target: object) => void;
     format: (value: unknown, dataLabel: string) => unknown;
+    excludeColumns?: Array<string>;
     compactViewEnabled: boolean;
+    rowsPerPageOptions?: Array<number>;
     title: string;
 }
 
@@ -58,17 +60,20 @@ export default function EnhancedTable(props: EnhancedTableProps) {
         setDeleteDialogState,
         setSelectedTarget,
         format,
+        excludeColumns,
         compactViewEnabled,
+        rowsPerPageOptions,
         title
     } = props;
 
     const [order, setOrder] = React.useState<'asc' | 'desc'>('asc');
     const [page, setPage] = React.useState<number>(0);
     const [dense, setDense] = React.useState<boolean>(!compactViewEnabled);
-    const [rowsPerPage, setRowsPerPage] = React.useState<number>(5);
+    const [rowsPerPage, setRowsPerPage] = React.useState<number>(rowsPerPageOptions?.[0] || 5);
     const [orderBy, setOrderBy] = React.useState<string>('');
 
-    const dataLabels = Object.keys(rows[0] || {});
+    //const dataLabels = Object.keys(rows[0] || {});
+    const dataLabels = Object.keys(rows[0] || {}).filter((label) => !excludeColumns?.includes(label));
 
     function getDefaultTitle(entityName?: string) {
         return entityName
@@ -165,7 +170,7 @@ export default function EnhancedTable(props: EnhancedTableProps) {
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((row) => {
                                 // @ts-ignore
-                                const rowEnum = Object.keys(row).map((k) => row[k]);
+                                const rowEnum = dataLabels.map((k) => row[k]);
 
                                 return (
                                     <TableRow
@@ -214,7 +219,7 @@ export default function EnhancedTable(props: EnhancedTableProps) {
                     label="Compact view"
                 />
                 <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
+                    rowsPerPageOptions={rowsPerPageOptions || [5, 10, 25]}
                     component="div"
                     count={rows?.length || 0}
                     rowsPerPage={rowsPerPage}

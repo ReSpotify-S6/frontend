@@ -41,6 +41,8 @@ export default function SongCrudPage() {
 
     function format(value: unknown, dataLabel: string) {
         switch(dataLabel){
+            case "audioLink":
+                return <audio controls src={value as string} style={{width: 200}}/>;
             case "imageLink":
                 return <img src={value as string} alt="Song" style={{width: 100, height: 100}}/>;
             default:
@@ -60,12 +62,14 @@ export default function SongCrudPage() {
                 <EnhancedTable
                     entityName='song'
                     rows={songs}
+                    excludeColumns={["id"]}
                     setCreateDialogState={setCreateDialogState}
                     setUpdateDialogState={setUpdateDialogState}
                     setDeleteDialogState={setDeleteDialogState}
                     setSelectedTarget={(song: object) => setSelectedSong(song as Song)}
                     format={format} 
-                    compactViewEnabled={false} 
+                    compactViewEnabled={false}
+                    rowsPerPageOptions={[3, 5, 10]}
                     title=""
                 />
             </Box>
