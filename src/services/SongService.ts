@@ -18,8 +18,7 @@ export default class SongService {
     getAllSongs = async (): Promise<Array<Song>> => {
         return this.api.get('/songs').then((response) => {
             return response.data;
-        }).catch((error) => {
-            console.error(error);
+        }).catch(() => {
             return [];
         });
     }
@@ -34,8 +33,8 @@ export default class SongService {
             audioLink
         }).then(() => {
             return '';
-        }).catch(() => {
-            return "Unhandled error has occured.";
+        }).catch(({response}) => {
+            return response.data[0];
         });
     }
 
@@ -50,8 +49,8 @@ export default class SongService {
             audioLink
         }).then(() => {
             return '';
-        }).catch(() => {
-            return "Unhandled error has occured.";
+        }).catch(({response}) => {
+            return response.data[0];
         });
     }
 
