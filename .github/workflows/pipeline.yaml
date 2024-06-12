@@ -44,6 +44,7 @@ jobs:
         retention-days: 30
 
   deploy:
+    needs: test
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -66,6 +67,7 @@ jobs:
       run: docker push respotify.azurecr.io/frontend
 
   restart-deployment:
+    needs: deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
