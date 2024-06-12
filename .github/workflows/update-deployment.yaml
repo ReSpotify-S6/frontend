@@ -1,14 +1,14 @@
 name: Update Deployment
-on: workflow_dispatch
-#  workflow_run:
-#    workflows: ["Deploy"]
-#    types:
-#      - completed
+on:
+  workflow_run:
+    workflows: ["Deploy"]
+    types:
+      - completed
 
 jobs:
   update-deployment:
     runs-on: ubuntu-latest
-#    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
