@@ -47,7 +47,6 @@ jobs:
 
   analyze:
     name: Static code analysis
-    needs: test 
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
@@ -62,7 +61,6 @@ jobs:
 
   vulnerability-scan:
     name: Vulnerability scan
-    needs: analyze
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
@@ -73,7 +71,7 @@ jobs:
 
   deploy:
     name: Deployment
-    needs: vulnerability-scan
+    needs: [test, analyze, vulnerability-scan]
     runs-on: ubuntu-latest
     defaults:
       run:
