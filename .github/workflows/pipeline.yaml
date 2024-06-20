@@ -1,4 +1,3 @@
-
 name: Main pipeline
 
 on:
@@ -109,6 +108,6 @@ jobs:
         run: az aks get-credentials --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --name ${{ secrets.AZURE_CLUSTER_NAME }} --overwrite-existing
 
       - name: Restart deployment
-        run: kubectl rollout restart deployment/frontend
+        run: kubectl rollout restart deployment/frontend -n ingress-nginx
         continue-on-error: true #If aks cluster is not available, the pipeline should not fail
       
