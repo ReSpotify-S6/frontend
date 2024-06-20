@@ -39,11 +39,11 @@ export default function CreateSongDialog(props: CreateSongDialogProps) {
             setSongService(songService);
 
             audioService.fetchAudioLinks().then((array) => {
-                setAudioLinks(array);
+                setAudioLinks(array || []);
             });
 
             imageService.fetchImageLinks().then((array) => {
-                setImageLinks(array);
+                setImageLinks(array || []);
             });
             
         }
@@ -89,7 +89,7 @@ export default function CreateSongDialog(props: CreateSongDialogProps) {
                 <TextField required id="title" label="Title" name='title' variant="outlined" />
                 <TextField required id="artist" label="Artist" name='artist' variant="outlined" />
                 <TextField
-                    id="imageLink"
+                    name="imageLink"
                     value={imageLink}
                     select
                     onChange={(event) => setImageLink(event.target.value)}
@@ -98,12 +98,11 @@ export default function CreateSongDialog(props: CreateSongDialogProps) {
                     {imageLinks.map((link) => (
                         <MenuItem key={link} value={link}>
                             {decodeURIComponent(link.split('/').pop() as string)}
-                            <img src={link} alt='image' style={{ width: 50, height: 50 }} />
                         </MenuItem>
                     ))}
                 </TextField>
                 <TextField
-                    id="audioLink"
+                    name="audioLink"
                     value={audioLink}
                     select
                     onChange={(event) => setAudioLink(event.target.value)}

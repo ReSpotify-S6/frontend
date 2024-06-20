@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import { CreateSongProps, Song, UpdateSongProps } from "./types";
+import { CreateSongProps, Song } from "./types";
 
 export default class SongService {
     private api: AxiosInstance;
@@ -27,22 +27,6 @@ export default class SongService {
         const { title, artist, imageLink, audioLink } = props;
         
         return this.api.post('/songs', {
-            title,
-            artist,
-            imageLink,
-            audioLink
-        }).then(() => {
-            return '';
-        }).catch(({response}) => {
-            return response.data[0];
-        });
-    }
-
-
-    updateSong = async (props: UpdateSongProps): Promise<string> => {
-        const { id, title, artist, imageLink, audioLink } = props;
-
-        return this.api.put(`/songs/${id}`, {
             title,
             artist,
             imageLink,

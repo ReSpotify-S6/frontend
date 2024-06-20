@@ -4,6 +4,7 @@ import Root from "../pages/Root.tsx";
 import MainPage from "../pages/MainPage/MainPage.tsx";
 import SongCrudPage from "../pages/SongCrudPage/SongCrudPage.tsx";
 import AudioCrudPage from "../pages/AudioCrudPage/AudioCrudPage.tsx";
+import ImageCrudPage from "../pages/ImageCrudPage/ImageCrudPage.tsx";
 
 const Router = createBrowserRouter([
     {
@@ -22,6 +23,10 @@ const Router = createBrowserRouter([
             {
                 path: "/audio",
                 element: <AudioCrudPage/>
+            },
+            {
+                path: "/images",
+                element: <ImageCrudPage/>
             }
         ]
     }

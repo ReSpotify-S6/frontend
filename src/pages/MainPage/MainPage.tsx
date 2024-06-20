@@ -56,7 +56,7 @@ export default function App() {
             track.pause();
         }
 
-        const newTrack = new Audio(song.audioLink);
+        const newTrack = new Audio(`${song.audioLink}?token=${keycloak.token}`);
         newTrack.play();
         setTrack(newTrack);
         setPlaying(true);
@@ -102,7 +102,7 @@ export default function App() {
                         id={song.id}
                         title={song.title}
                         artist={song.artist}
-                        imageSource={song.imageLink}
+                        imageSource={`${song.imageLink}?token=${keycloak.token}`}
                         onClick={handleSongSelect}
                     />
                 ))}

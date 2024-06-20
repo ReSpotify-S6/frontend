@@ -1,6 +1,5 @@
 import {useEffect, useState} from "react";
 import EnhancedTable from "../../components/EnhancedTable/EnhancedTable";
-import UpdateSongDialog from "./UpdateSongDialog";
 import DeleteEntityDialog from "../../components/Dialog/DeleteEntityDialog";
 import { Box } from "@mui/material";
 import { Song } from "../../services/song/types";
@@ -12,7 +11,6 @@ export default function SongCrudPage() {
     const [songs, setSongs] = useState<Song[]>([]);
     const [selectedSong, setSelectedSong] = useState<Song | undefined>(undefined);
     const [createDialogState, setCreateDialogState] = useState(false);
-    const [updateDialogState, setUpdateDialogState] = useState(false);
     const [deleteDialogState, setDeleteDialogState] = useState(false);
     const [service, setService] = useState<SongService>();
     const { keycloak } = useKeycloak();
@@ -42,9 +40,9 @@ export default function SongCrudPage() {
     function format(value: unknown, dataLabel: string) {
         switch(dataLabel){
             case "audioLink":
-                return <audio controls src={value as string} style={{width: 200}}/>;
+                return <audio controls src={`${value}?token=${keycloak.token}`} style={{width: 200}}/>;
             case "imageLink":
-                return <img src={value as string} alt="Song" style={{width: 100, height: 100}}/>;
+                return <img src={`${value}?token=${keycloak.token}`} alt="Song" style={{width: 100, height: 100}}/>;
             default:
                 return value || "N/A";
         }
@@ -64,7 +62,6 @@ export default function SongCrudPage() {
                     rows={songs}
                     excludeColumns={["id"]}
                     setCreateDialogState={setCreateDialogState}
-                    setUpdateDialogState={setUpdateDialogState}
                     setDeleteDialogState={setDeleteDialogState}
                     setSelectedTarget={(song: object) => setSelectedSong(song as Song)}
                     format={format} 
@@ -76,12 +73,6 @@ export default function SongCrudPage() {
             <CreateSongDialog
                 open={createDialogState}
                 setOpen={setCreateDialogState}
-                callback={refresh}
-            />
-            <UpdateSongDialog
-                open={updateDialogState}
-                setOpen={setUpdateDialogState}
-                song={selectedSong}
                 callback={refresh}
             />
             <DeleteEntityDialog open={deleteDialogState}

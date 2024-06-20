@@ -12,11 +12,3 @@ export interface CreateSongProps {
     imageLink: string;
     audioLink: string;
 }
-
-export interface UpdateSongProps {
-    id: string;
-    title: string;
-    artist: string;
-    imageLink: string;
-    audioLink: string;
-}

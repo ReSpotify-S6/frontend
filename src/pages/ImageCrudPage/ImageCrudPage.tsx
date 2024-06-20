@@ -3,23 +3,23 @@ import EnhancedTable from "../../components/EnhancedTable/EnhancedTable";
 import { Box } from "@mui/material";
 import { useKeycloak } from "@react-keycloak/web";
 import DeleteEntityDialog from "../../components/Dialog/DeleteEntityDialog";
-import CreateAudioDialog from "./CreateAudioDialog";
-import AudioService from "../../services/audio/service";
+import CreateImageDialog from "./CreateImageDialog";
+import ImageService from "../../services/images/service";
 
-export default function AudioCrudPage() {
-    const [audiolinks, setAudiolinks] = useState<string[]>([]);
-    const [selectedAudioLink, setSelectedAudioLink] = useState<string>('');
+export default function ImageCrudPage() {
+    const [imagelinks, setImagelinks] = useState<string[]>([]);
+    const [selectedImageLink, setSelectedImageLink] = useState<string>();
     const [createDialogState, setCreateDialogState] = useState(false);
     const [deleteDialogState, setDeleteDialogState] = useState(false);
-    const [service, setService] = useState<AudioService>();
+    const [service, setService] = useState<ImageService>();
     const { keycloak } = useKeycloak();
 
 
     useEffect(() => {
         if (keycloak.token) {
-            const service = new AudioService(keycloak.token);
-            service.fetchAudioLinks().then((array) => {
-                setAudiolinks(array || []);
+            const service = new ImageService(keycloak.token);
+            service.fetchImageLinks().then((array) => {
+                setImagelinks(array || []);
             });
             setService(service);
         }
@@ -27,12 +27,12 @@ export default function AudioCrudPage() {
 
 
     function handleDelete(id: string) {
-        service?.deleteAudio(id);
+        service?.deleteImage(id);
     }
 
     function refresh() {
-        service?.fetchAudioLinks().then((array) => {
-            setAudiolinks(array || []);
+        service?.fetchImageLinks().then((array) => {
+            setImagelinks(array);
         });
     }
 
@@ -40,8 +40,8 @@ export default function AudioCrudPage() {
         switch(dataLabel){
             case 'name':
                 return decodeURIComponent(value as string);
-            case 'audio':
-                return <audio src={`${value}?token=${keycloak.token}`} controls />;
+            case 'image':
+                return <img src={`${value}?token=${keycloak.token}`} alt={value as string} style={{width: "100px", height: "100px"}} />;
             default:
                 return value || "N/A";
         }
@@ -57,26 +57,26 @@ export default function AudioCrudPage() {
                 mb: "20%"
             }}>
                 <EnhancedTable
-                    entityName='audioLink'
-                    rows={audiolinks?.map((link) => ({name: decodeURIComponent(link.split('/').pop() as string), audio: link }))}
+                    entityName='imageLink'
+                    rows={imagelinks?.map((link) => ({name: decodeURIComponent(link.split('/').pop() as string), image: link }))}
                     excludeColumns={["id"]}
                     setCreateDialogState={setCreateDialogState}
                     setDeleteDialogState={setDeleteDialogState}
-                    setSelectedTarget={(audioLink: object) => setSelectedAudioLink(audioLink as unknown as string)}
+                    setSelectedTarget={(imageLink: object) => setSelectedImageLink(imageLink as unknown as string)}
                     format={format} 
                     compactViewEnabled={false}
                     rowsPerPageOptions={[3, 5, 10]}
                     title=""
                 />
             </Box>
-            <CreateAudioDialog
+            <CreateImageDialog
                 open={createDialogState}
                 setOpen={setCreateDialogState}
                 callback={refresh}
             />
             <DeleteEntityDialog open={deleteDialogState}
-                                entityName='audioLink'
-                                entityId={selectedAudioLink}
+                                entityName='imageLink'
+                                entityId={selectedImageLink}
                                 deleteFunction={handleDelete}
                                 setOpen={setDeleteDialogState}
                                 callback={refresh}
