@@ -3,6 +3,7 @@ import ErrorPage from "../pages/ErrorPage.tsx";
 import Root from "../pages/Root.tsx";
 import MainPage from "../pages/MainPage/MainPage.tsx";
 import SongCrudPage from "../pages/SongCrudPage/SongCrudPage.tsx";
+import AudioCrudPage from "../pages/AudioCrudPage/AudioCrudPage.tsx";
 
 const Router = createBrowserRouter([
     {
@@ -15,8 +16,12 @@ const Router = createBrowserRouter([
                 element: <MainPage/>,
             },
             {
-                path: "/admin",
+                path: "/songs",
                 element: <SongCrudPage/>
+            },
+            {
+                path: "/audio",
+                element: <AudioCrudPage/>
             }
         ]
     }

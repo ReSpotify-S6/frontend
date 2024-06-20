@@ -1,7 +1,7 @@
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import AddIcon from '@mui/icons-material/Add';
-import CustomButton from "../../../components/CustomButton";
+import CustomButton from "../CustomButton";
 
 interface EnhancedTableToolbarProps {
     title: string;

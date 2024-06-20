@@ -17,8 +17,14 @@ export default function AdminToolbar() {
             <Link component={RouterLink} to='/'>
                 <SpotifyIcon />
             </Link>
-            <CustomButton link="/admin" invertColors>
-                Admin page
+            <CustomButton link="/songs" invertColors>
+                Manage songs
+            </CustomButton>
+            <CustomButton link="/audio" invertColors>
+                Manage audio
+            </CustomButton>
+            <CustomButton link="/images" invertColors>
+                Manage images
             </CustomButton>
         </LeftSide>
         <RightSide>

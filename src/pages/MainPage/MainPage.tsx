@@ -6,10 +6,10 @@ import ShuffleIcon from '@mui/icons-material/Shuffle';
 import RepeatIcon from '@mui/icons-material/Repeat';
 import { useEffect, useState } from 'react';
 import SongCard from './SongCard/SongCard';
-import { Song } from '../../services/types';
+import { Song } from '../../services/song/types';
 import { PauseCircle, PlayCircle } from '@mui/icons-material';
 import { useKeycloak } from '@react-keycloak/web';
-import SongService from '../../services/SongService';
+import SongService from '../../services/song/service';
 
 export default function App() {
     const [songs, setSongs] = useState<Song[]>([]);

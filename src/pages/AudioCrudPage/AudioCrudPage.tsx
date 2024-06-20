@@ -1,28 +1,26 @@
 import {useEffect, useState} from "react";
 import EnhancedTable from "../../components/EnhancedTable/EnhancedTable";
-import UpdateSongDialog from "./UpdateSongDialog";
-import DeleteEntityDialog from "../../components/Dialog/DeleteEntityDialog";
 import { Box } from "@mui/material";
-import { Song } from "../../services/song/types";
 import { useKeycloak } from "@react-keycloak/web";
-import SongService from "../../services/song/service";
-import CreateSongDialog from "./CreateSongDialog";
+import DeleteEntityDialog from "../../components/Dialog/DeleteEntityDialog";
+import CreateAudioDialog from "./CreateAudioDialog";
+import AudioService from "../../services/audio/service";
 
-export default function SongCrudPage() {
-    const [songs, setSongs] = useState<Song[]>([]);
-    const [selectedSong, setSelectedSong] = useState<Song | undefined>(undefined);
+export default function AudioCrudPage() {
+    const [audiolinks, setAudiolinks] = useState<string[]>([]);
+    const [selectedAudioLink, setSelectedAudioLink] = useState<string>();
     const [createDialogState, setCreateDialogState] = useState(false);
-    const [updateDialogState, setUpdateDialogState] = useState(false);
     const [deleteDialogState, setDeleteDialogState] = useState(false);
-    const [service, setService] = useState<SongService>();
+    const [service, setService] = useState<AudioService>();
     const { keycloak } = useKeycloak();
 
 
     useEffect(() => {
         if (keycloak.token) {
-            const service = new SongService(keycloak.token);
-            service.getAllSongs().then((array) => {
-                setSongs(array);
+            const service = new AudioService(keycloak.token);
+            service.fetchAudioLinks().then((array) => {
+                console.log(array);
+                setAudiolinks(array);
             });
             setService(service);
         }
@@ -30,21 +28,19 @@ export default function SongCrudPage() {
 
 
     function handleDelete(id: string) {
-        service?.deleteSong(id);
+        service?.deleteAudio(id);
     }
 
     function refresh() {
-        service?.getAllSongs().then((array) => {
-            setSongs(array);
+        service?.fetchAudioLinks().then((array) => {
+            setAudiolinks(array);
         });
     }
 
     function format(value: unknown, dataLabel: string) {
         switch(dataLabel){
-            case "audioLink":
-                return <audio controls src={value as string} style={{width: 200}}/>;
-            case "imageLink":
-                return <img src={value as string} alt="Song" style={{width: 100, height: 100}}/>;
+            case 'name':
+                return decodeURIComponent(value as string);
             default:
                 return value || "N/A";
         }
@@ -60,33 +56,26 @@ export default function SongCrudPage() {
                 mb: "20%"
             }}>
                 <EnhancedTable
-                    entityName='song'
-                    rows={songs}
+                    entityName='audioLink'
+                    rows={audiolinks.map((link) => ({name: decodeURIComponent(link.split('/').pop() as string), link }))}
                     excludeColumns={["id"]}
                     setCreateDialogState={setCreateDialogState}
-                    setUpdateDialogState={setUpdateDialogState}
                     setDeleteDialogState={setDeleteDialogState}
-                    setSelectedTarget={(song: object) => setSelectedSong(song as Song)}
+                    setSelectedTarget={(audioLink: object) => setSelectedAudioLink(audioLink as unknown as string)}
                     format={format} 
                     compactViewEnabled={false}
                     rowsPerPageOptions={[3, 5, 10]}
                     title=""
                 />
             </Box>
-            <CreateSongDialog
+            <CreateAudioDialog
                 open={createDialogState}
                 setOpen={setCreateDialogState}
                 callback={refresh}
             />
-            <UpdateSongDialog
-                open={updateDialogState}
-                setOpen={setUpdateDialogState}
-                song={selectedSong}
-                callback={refresh}
-            />
             <DeleteEntityDialog open={deleteDialogState}
-                                entityName='song'
-                                entityId={selectedSong?.id}
+                                entityName='audioLink'
+                                entityId={selectedAudioLink}
                                 deleteFunction={handleDelete}
                                 setOpen={setDeleteDialogState}
                                 callback={refresh}

@@ -1,12 +1,15 @@
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import DialogButton from "./DialogButton";
-import SimpleDialog from "./SimpleDialog";
 import * as React from "react";
 import { useKeycloak } from "@react-keycloak/web";
-import SongService from "../../../services/SongService";
 import { useEffect } from "react";
+import SongService from "../../services/song/service";
+import DialogButton from "../../components/Dialog/DialogButton";
+import SimpleDialog from "../../components/Dialog/SimpleDialog";
+import { MenuItem } from "@mui/material";
+import AudioService from "../../services/audio/service";
+import ImageService from "../../services/images/service";
 
 interface CreateSongDialogProps {
     open: boolean;
@@ -17,15 +20,35 @@ interface CreateSongDialogProps {
 export default function CreateSongDialog(props: CreateSongDialogProps) {
     const { open, setOpen, callback } = props;
     const [errorMessage, setErrorMessage] = React.useState('');
-    const [service, setService] = React.useState<SongService>();
+    const [songService, setSongService] = React.useState<SongService>();
+
+    const [audioLinks, setAudioLinks] = React.useState<string[]>([]);
+    const [audioLink, setAudioLink] = React.useState<string>();
+
+    const [imageLinks, setImageLinks] = React.useState<string[]>([]);
+    const [imageLink, setImageLink] = React.useState<string>();
 
     const { keycloak } = useKeycloak();
 
     useEffect(() => {
         if (keycloak.token) {
-            setService(new SongService(keycloak.token));
+            const songService = new SongService(keycloak.token);
+            const audioService = new AudioService(keycloak.token);
+            const imageService = new ImageService(keycloak.token);
+
+            setSongService(songService);
+
+            audioService.fetchAudioLinks().then((array) => {
+                setAudioLinks(array);
+            });
+
+            imageService.fetchImageLinks().then((array) => {
+                setImageLinks(array);
+            });
+            
         }
     }, [keycloak.token]);
+
 
 
     function handleCreate(event: React.FormEvent<HTMLFormElement>) {
@@ -36,7 +59,7 @@ export default function CreateSongDialog(props: CreateSongDialogProps) {
         const imageLink = data.get('imageLink') as string;
         const audioLink = data.get('audioLink') as string;
 
-        service?.createSong({ title, artist, imageLink, audioLink })
+        songService?.createSong({ title, artist, imageLink, audioLink })
             .then((response: string) => {
                 if (!response) {
                     callback?.();
@@ -65,8 +88,33 @@ export default function CreateSongDialog(props: CreateSongDialogProps) {
 
                 <TextField required id="title" label="Title" name='title' variant="outlined" />
                 <TextField required id="artist" label="Artist" name='artist' variant="outlined" />
-                <TextField required id="imageLink" label="Image Link" name='imageLink' variant="outlined" />
-                <TextField required id="audioLink" label="Audio Link" name='audioLink' variant="outlined" />
+                <TextField
+                    id="imageLink"
+                    value={imageLink}
+                    select
+                    onChange={(event) => setImageLink(event.target.value)}
+                    label="Image"
+                >
+                    {imageLinks.map((link) => (
+                        <MenuItem key={link} value={link}>
+                            {decodeURIComponent(link.split('/').pop() as string)}
+                            <img src={link} alt='image' style={{ width: 50, height: 50 }} />
+                        </MenuItem>
+                    ))}
+                </TextField>
+                <TextField
+                    id="audioLink"
+                    value={audioLink}
+                    select
+                    onChange={(event) => setAudioLink(event.target.value)}
+                    label="Audio"
+                >
+                    {audioLinks.map((link) => (
+                        <MenuItem key={link} value={link}>
+                            {decodeURIComponent(link.split('/').pop() as string)}
+                        </MenuItem>
+                    ))}
+                </TextField>
                 <Typography sx={{
                     color: 'red',
                     fontSize: '0.9rem',

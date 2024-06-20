@@ -1,13 +1,13 @@
 import * as React from "react";
-import SimpleDialog from "./SimpleDialog";
+import SimpleDialog from "../../components/Dialog/SimpleDialog";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import DialogButton from "./DialogButton";
-import { Song } from "../../../services/types";
+import DialogButton from "../../components/Dialog/DialogButton";
 import { useKeycloak } from "@react-keycloak/web";
 import { useEffect, useState } from "react";
-import SongService from "../../../services/SongService";
+import { Song } from "../../services/song/types";
+import SongService from "../../services/song/service";
 
 interface UpdateSongDialogProps {
     open: boolean;
