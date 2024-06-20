@@ -9,8 +9,8 @@ on:
 
 jobs:
   test:
+    name: Test solution
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [21.x]
@@ -46,6 +46,7 @@ jobs:
         retention-days: 30
 
   analyze:
+    name: Static code analysis
     needs: test 
     runs-on: ubuntu-latest
     steps:
@@ -60,30 +61,25 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   vulnerability_scan:
+    name: Vulnerability scan
     needs: analyze
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Install Snyk CLI
-        run: npm install -g snyk
-
-      - name: Authenticate with Snyk
+      - uses: actions/checkout@master
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/node@master
+        continue-on-error: true # To make sure that SARIF upload gets called
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        run: npx snyk auth $SNYK_TOKEN
-
-      - name: Run Snyk security scan
-        run: npx snyk test --json > snyk-output.json
-
-      - name: Upload Snyk results
-        uses: actions/upload-artifact@v2
         with:
-          name: snyk-results
-          path: snyk-output.json
+          args: --sarif-file-output=snyk.sarif
+      - name: Upload result to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: snyk.sarif
 
   deploy:
+    name: Deployment
     needs: vulnerability_scan
     runs-on: ubuntu-latest
     defaults:
@@ -109,6 +105,7 @@ jobs:
       run: docker push respotify.azurecr.io/frontend
 
   restart-deployment:
+    name: Restart service
     needs: deploy
     runs-on: ubuntu-latest
     steps:
