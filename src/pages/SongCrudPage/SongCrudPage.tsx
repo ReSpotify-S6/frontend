@@ -6,6 +6,7 @@ import { Song } from "../../services/song/types";
 import { useKeycloak } from "@react-keycloak/web";
 import SongService from "../../services/song/service";
 import CreateSongDialog from "./CreateSongDialog";
+import './styles.scss';
 
 export default function SongCrudPage() {
     const [songs, setSongs] = useState<Song[]>([]);
@@ -40,9 +41,9 @@ export default function SongCrudPage() {
     function format(value: unknown, dataLabel: string) {
         switch(dataLabel){
             case "audioLink":
-                return <audio controls src={`${value}?token=${keycloak.token}`} style={{width: 200}}/>;
+                return <audio controls src={`${value}?token=${keycloak.token}`}/>;
             case "imageLink":
-                return <img src={`${value}?token=${keycloak.token}`} alt="Song" style={{width: 100, height: 100}}/>;
+                return <img src={`${value}?token=${keycloak.token}`} alt="Song"/>;
             default:
                 return value || "N/A";
         }

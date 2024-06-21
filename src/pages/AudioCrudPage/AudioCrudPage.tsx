@@ -5,6 +5,7 @@ import { useKeycloak } from "@react-keycloak/web";
 import DeleteEntityDialog from "../../components/Dialog/DeleteEntityDialog";
 import CreateAudioDialog from "./CreateAudioDialog";
 import AudioService from "../../services/audio/service";
+import './styles.scss';
 
 export default function AudioCrudPage() {
     const [audiolinks, setAudiolinks] = useState<string[]>([]);

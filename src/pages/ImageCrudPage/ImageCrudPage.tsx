@@ -5,6 +5,7 @@ import { useKeycloak } from "@react-keycloak/web";
 import DeleteEntityDialog from "../../components/Dialog/DeleteEntityDialog";
 import CreateImageDialog from "./CreateImageDialog";
 import ImageService from "../../services/images/service";
+import './styles.scss';
 
 export default function ImageCrudPage() {
     const [imagelinks, setImagelinks] = useState<string[]>([]);
@@ -41,7 +42,7 @@ export default function ImageCrudPage() {
             case 'name':
                 return decodeURIComponent(value as string);
             case 'image':
-                return <img src={`${value}?token=${keycloak.token}`} alt={value as string} style={{width: "100px", height: "100px"}} />;
+                return <img src={`${value}?token=${keycloak.token}`} alt={value as string} />;
             default:
                 return value || "N/A";
         }
