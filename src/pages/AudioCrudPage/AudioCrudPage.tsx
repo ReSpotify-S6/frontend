@@ -26,8 +26,8 @@ export default function AudioCrudPage() {
     }, [keycloak]);
 
 
-    function handleDelete(id: string) {
-        service?.deleteAudio(id);
+    function handleDelete() {
+        service?.deleteAudio(selectedAudioLink);
     }
 
     function refresh() {
@@ -57,12 +57,12 @@ export default function AudioCrudPage() {
                 mb: "20%"
             }}>
                 <EnhancedTable
-                    entityName='audioLink'
+                    entityName='audio file'
                     rows={audiolinks?.map((link) => ({name: decodeURIComponent(link.split('/').pop() as string), audio: link }))}
                     excludeColumns={["id"]}
                     setCreateDialogState={setCreateDialogState}
                     setDeleteDialogState={setDeleteDialogState}
-                    setSelectedTarget={(audioLink: object) => setSelectedAudioLink(audioLink as unknown as string)}
+                    setSelectedTarget={(audioLink: {name: string, audio: string}) => setSelectedAudioLink(audioLink.audio)}
                     format={format} 
                     compactViewEnabled={false}
                     rowsPerPageOptions={[3, 5, 10]}
@@ -75,8 +75,8 @@ export default function AudioCrudPage() {
                 callback={refresh}
             />
             <DeleteEntityDialog open={deleteDialogState}
-                                entityName='audioLink'
-                                entityId={selectedAudioLink}
+                                entityName='audio file'
+                                entityId={decodeURIComponent(selectedAudioLink.split('/').pop() as string)}
                                 deleteFunction={handleDelete}
                                 setOpen={setDeleteDialogState}
                                 callback={refresh}

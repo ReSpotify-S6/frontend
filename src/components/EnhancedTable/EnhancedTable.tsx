@@ -41,7 +41,7 @@ interface EnhancedTableProps {
     setCreateDialogState?: (state: boolean) => void;
     setUpdateDialogState?: (state: boolean) => void;
     setDeleteDialogState?: (state: boolean) => void;
-    setSelectedTarget: (target: object) => void;
+    setSelectedTarget: (target: any) => void;
     format: (value: unknown, dataLabel: string) => unknown;
     excludeColumns?: Array<string>;
     compactViewEnabled: boolean;

@@ -63,7 +63,7 @@ export default function CreateImageDialog(props: CreateSongDialogProps) {
     }
 
     return (
-        <SimpleDialog title='Create a song' open={open}>
+        <SimpleDialog title='Upload an image' open={open}>
             <Box component="form" noValidate onSubmit={handleCreate}
                 sx={{
                     display: 'flex',

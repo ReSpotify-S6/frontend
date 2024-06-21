@@ -27,8 +27,8 @@ export default function SongCrudPage() {
     }, [keycloak]);
 
 
-    function handleDelete(id: string) {
-        service?.deleteSong(id);
+    function handleDelete() {
+        selectedSong && service?.deleteSong(selectedSong.id);
     }
 
     function refresh() {
@@ -77,7 +77,7 @@ export default function SongCrudPage() {
             />
             <DeleteEntityDialog open={deleteDialogState}
                                 entityName='song'
-                                entityId={selectedSong?.id}
+                                entityId={selectedSong?.title}
                                 deleteFunction={handleDelete}
                                 setOpen={setDeleteDialogState}
                                 callback={refresh}

@@ -26,8 +26,8 @@ export default function ImageCrudPage() {
     }, [keycloak]);
 
 
-    function handleDelete(id: string) {
-        service?.deleteImage(id);
+    function handleDelete() {
+        selectedImageLink && service?.deleteImage(selectedImageLink);
     }
 
     function refresh() {
@@ -57,12 +57,12 @@ export default function ImageCrudPage() {
                 mb: "20%"
             }}>
                 <EnhancedTable
-                    entityName='imageLink'
+                    entityName='image'
                     rows={imagelinks?.map((link) => ({name: decodeURIComponent(link.split('/').pop() as string), image: link }))}
                     excludeColumns={["id"]}
                     setCreateDialogState={setCreateDialogState}
                     setDeleteDialogState={setDeleteDialogState}
-                    setSelectedTarget={(imageLink: object) => setSelectedImageLink(imageLink as unknown as string)}
+                    setSelectedTarget={(obj: {name: string, image: string}) => setSelectedImageLink(obj.image)}
                     format={format} 
                     compactViewEnabled={false}
                     rowsPerPageOptions={[3, 5, 10]}
@@ -75,8 +75,8 @@ export default function ImageCrudPage() {
                 callback={refresh}
             />
             <DeleteEntityDialog open={deleteDialogState}
-                                entityName='imageLink'
-                                entityId={selectedImageLink}
+                                entityName='image'
+                                entityId={decodeURIComponent(selectedImageLink?.split('/').pop() as string)}
                                 deleteFunction={handleDelete}
                                 setOpen={setDeleteDialogState}
                                 callback={refresh}

@@ -6,7 +6,7 @@ interface DeleteEntityDialogProps {
     setOpen: (value: boolean) => void;
     entityName: string;
     entityId?: string;
-    deleteFunction: (id: string) => void;
+    deleteFunction: () => void;
     callback?: () => void;
 }
 
@@ -14,15 +14,15 @@ export default function DeleteEntityDialog(props: DeleteEntityDialogProps) {
     const {open, setOpen, entityName, entityId, deleteFunction, callback} = props;
 
     function handleDelete(){
-        entityId && deleteFunction(entityId);
+        deleteFunction();
         callback?.();
-        setOpen(false);
+        setTimeout(() => setOpen(false), 1000);
     }
     function handleClose(){
         setOpen(false);
     }
 
-    const title = 'Are you sure want to delete ' + (entityName?.toLowerCase() || 'entity') + ' with id \'' + entityId + '\' ?';
+    const title = 'Are you sure want to delete ' + (entityName?.toLowerCase() || 'entity') + ' \'' + entityId + '\' ?';
 
     return (
         <SimpleDialog title={title} open={open}>
