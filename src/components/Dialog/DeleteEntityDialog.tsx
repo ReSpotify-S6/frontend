@@ -15,8 +15,10 @@ export default function DeleteEntityDialog(props: DeleteEntityDialogProps) {
 
     function handleDelete(){
         deleteFunction();
-        callback?.();
-        setTimeout(() => setOpen(false), 1000);
+        setTimeout(() => {
+            setOpen(false);
+            callback?.();
+        }, 500);
     }
     function handleClose(){
         setOpen(false);
